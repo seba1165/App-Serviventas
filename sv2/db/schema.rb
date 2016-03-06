@@ -57,8 +57,8 @@ ActiveRecord::Schema.define(version: 20160306011702) do
   add_index "articulo", ["art_tipo_cod"], name: "relationship_19_fk", using: :btree
 
   create_table "boleta", primary_key: "doc_pago_cod", force: :cascade do |t|
-    t.date   "doc_pago_fecha"
-    t.string "doc_pago_obs",   limit: 50
+    t.datetime "doc_pago_fecha"
+    t.string   "doc_pago_obs",   limit: 50
   end
 
   add_index "boleta", ["doc_pago_cod"], name: "boleta_pk", unique: true, using: :btree
@@ -146,6 +146,7 @@ ActiveRecord::Schema.define(version: 20160306011702) do
     t.string  "art_cod",       limit: 20,                                                null: false
     t.integer "art_cant"
     t.integer "art_desc"
+    t.integer "art_precio"
   end
 
   add_index "det_cot_odc_art", ["art_cod"], name: "relationship_2_fk", using: :btree
@@ -185,8 +186,8 @@ ActiveRecord::Schema.define(version: 20160306011702) do
   add_index "doc_previo", ["not_ven_cod"], name: "relationship_7_fk", using: :btree
 
   create_table "documento_de_pago", primary_key: "doc_pago_cod", force: :cascade do |t|
-    t.date   "doc_pago_fecha"
-    t.string "doc_pago_obs",   limit: 50
+    t.datetime "doc_pago_fecha"
+    t.string   "doc_pago_obs",   limit: 50
   end
 
   add_index "documento_de_pago", ["doc_pago_cod"], name: "documento_de_pago_pk", unique: true, using: :btree
@@ -258,9 +259,9 @@ ActiveRecord::Schema.define(version: 20160306011702) do
   add_index "estado_ot", ["ot_est_cod"], name: "estado_ot_pk", unique: true, using: :btree
 
   create_table "factura", primary_key: "doc_pago_cod", force: :cascade do |t|
-    t.integer "fact_est_cod",              null: false
-    t.date    "doc_pago_fecha"
-    t.string  "doc_pago_obs",   limit: 50
+    t.integer  "fact_est_cod",              null: false
+    t.datetime "doc_pago_fecha"
+    t.string   "doc_pago_obs",   limit: 50
   end
 
   add_index "factura", ["doc_pago_cod"], name: "factura_pk", unique: true, using: :btree
@@ -384,13 +385,13 @@ ActiveRecord::Schema.define(version: 20160306011702) do
   add_index "modelo", ["marca_cod"], name: "relationship_11_fk", using: :btree
 
   create_table "nota_de_venta", primary_key: "not_ven_cod", force: :cascade do |t|
-    t.integer  "od_cod"
-    t.integer  "not_ven_est_cod",             null: false
-    t.integer  "doc_pago_cod"
-    t.integer  "pago_cod"
-    t.datetime "not_ven_fecha"
-    t.string   "not_ven_obs",     limit: 100
-    t.integer  "doc_cod",                     null: false
+    t.integer "od_cod"
+    t.integer "not_ven_est_cod",             null: false
+    t.integer "doc_pago_cod"
+    t.integer "pago_cod"
+    t.date    "not_ven_fecha"
+    t.string  "not_ven_obs",     limit: 100
+    t.integer "doc_cod",                     null: false
   end
 
   add_index "nota_de_venta", ["doc_pago_cod"], name: "relationship_69_fk", using: :btree
