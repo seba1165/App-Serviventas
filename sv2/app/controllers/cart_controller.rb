@@ -41,11 +41,7 @@ class CartController < ApplicationController
         session[:cart] = {}
         cart = session[:cart]
       end
-      if cart[id]< 2 then
-        cart[id]= -1
-      else
-        cart[id] = cart[id]-1
-      end
+      session[:cart] = nil
 
       redirect_to :action => :index
     else

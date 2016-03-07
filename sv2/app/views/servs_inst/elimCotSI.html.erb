@@ -1,6 +1,6 @@
 <body>
 <div class="container">
-  <h1 style="color:#0B2161"><FONT FACE="times new roman">ADMINISTRAR COTIZACIONES POR ARTICULOS <small>   Editar, eliminar y crear cotizaciones</small></FONT></h1>
+  <h1 style="color:#0B2161"><FONT FACE="times new roman">ADMINISTRAR COTIZACIONES POR SERVICIOS DE INSTALACION <small>   Editar, eliminar y crear cotizaciones</small></FONT></h1>
   <hr>
 </div>
 <div class="container">
@@ -16,7 +16,7 @@
         <p></p>
         <div>
           <%= button_to "Si", @doc, :method => "delete" %>
-          <%= button_to "No", cots_odc_art_index_path, :method => :get %>
+          <%= button_to "No", servs_inst_index_url, :method => :get %>
         </div>
       </div>
     </div>
@@ -25,7 +25,7 @@
 <div class="row">
   <div class="col-md-1"></div>
   <div class="col-md-1">
-    <button type: "submit" class="btn btn-default" style="color:#FFFFFF; background-color:#5858FA;" onclick="location.href='/cots_odc_art/index';"><span class="glyphicon glyphicon-arrow-left"></span> Volver </button>
+    <button type: "submit" class="btn btn-default" style="color:#FFFFFF; background-color:#5858FA;" onclick="location.href='/servs_inst/index';"><span class="glyphicon glyphicon-arrow-left"></span> Volver </button>
   </div>
 </div>
 <hr>

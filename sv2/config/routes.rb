@@ -1,5 +1,17 @@
 Rails.application.routes.draw do
 
+  get 'ordenes_de_trabajo/index'
+
+  get 'ordenes_de_trabajo/edit'
+
+  get 'ordenes_de_trabajo/update'
+
+  get 'ordenes_de_trabajo/destroy'
+
+  get 'ordenes_de_trabajo/designar'
+
+  get 'ordenes_de_trabajo/terminar'
+
   get 'notas_de_venta/index'
 
   get 'notas_de_venta/new'
@@ -95,6 +107,7 @@ Rails.application.routes.draw do
   get 'cots_odc_art/show'
 
   get 'cots_odc_art/aprobar/:id' => 'cots_odc_art#aprobar'
+  get 'servs_inst/aprobar/:id' => 'servs_inst#aprobar'
   get 'notas_de_venta/pagar/:id' => 'notas_de_venta#pagar'
   get 'cots_odc_art/show/:id' => 'cots_odc_art#show'
   get 'empleados/show/:id' => 'empleados#show'
@@ -172,6 +185,7 @@ Rails.application.routes.draw do
   post "repuestos/del/:id" => 'repuestos#elimRepu', as: :elimRepu
   post "modelos/del/:id" => 'modelos#elimModelo', as: :elimModelo
   post "cots_odc_art/del/:id" => 'cots_odc_art#elimCotODCArt', as: :elimCotODCArt
+  post "servs_inst/del/:id" => 'servs_inst#elimCotSI', as: :elimCotSI
 
   post "cart/:id" => 'cart#add', as: :add
   post "cart/rest/:id" => 'cart#rest', as: :rest
@@ -180,6 +194,7 @@ Rails.application.routes.draw do
   post "cartart/rest/:id" => 'cartart#rest', as: :restArt
 
   post "cots_odc_art/aprobar/:id" => 'cots_odc_art#aprobar', as: :aprobar
+  post "servs_inst/aprobar/:id" => 'servs_inst#aprobar', as: :aprobarCotSI
   post "cots_odc_art/show/:id" => 'cots_odc_art#show', as: :show
   post "empleados/show/:id" => 'empleados#show', as: :showEmp
   post "clientes/show/:id" => 'clientes#show', as: :showCliente

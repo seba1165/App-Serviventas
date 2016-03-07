@@ -263,6 +263,22 @@ $$;
 ALTER FUNCTION public.cambiodeestot_in() OWNER TO seba;
 
 --
+-- Name: cambioestcotsi(); Type: FUNCTION; Schema: public; Owner: seba
+--
+
+CREATE FUNCTION cambioestcotsi() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+UPDATE cotizacion SET cot_est_cod = 0 WHERE doc_cod = OLD.doc_cod;
+return NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.cambioestcotsi() OWNER TO seba;
+
+--
 -- Name: creaarticulo(); Type: FUNCTION; Schema: public; Owner: seba
 --
 
@@ -360,29 +376,28 @@ $$;
 ALTER FUNCTION public.creaot() OWNER TO seba;
 
 --
--- Name: crearnotvent(); Type: FUNCTION; Schema: public; Owner: seba
+-- Name: crearnotventot(); Type: FUNCTION; Schema: public; Owner: seba
 --
 
-CREATE FUNCTION crearnotvent() RETURNS trigger
+CREATE FUNCTION crearnotventot() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
 begin
-
 if (OLD.cot_est_cod <> NEW.cot_est_cod and NEW.cot_est_cod = 1) then
-
+IF EXISTS (SELECT 1 FROM cot_odc_art WHERE doc_cod = NEW.doc_cod) THEN
 INSERT INTO nota_de_venta (not_ven_est_cod, not_ven_fecha, doc_cod) VALUES (0, now(), NEW.doc_cod);
-
+ElSE
+INSERT INTO orden_de_trabajo (doc_cod, ot_est_cod, ot_fecha) VALUES (OLD.doc_cod, 0, now());
 END if;
-
+END if;
 return NEW;
-
 END;
 
 $$;
 
 
-ALTER FUNCTION public.crearnotvent() OWNER TO seba;
+ALTER FUNCTION public.crearnotventot() OWNER TO seba;
 
 --
 -- Name: fn_log_audit(); Type: FUNCTION; Schema: public; Owner: seba
@@ -2710,7 +2725,7 @@ ALTER TABLE public.nv_sec OWNER TO seba;
 -- Name: nv_sec; Type: SEQUENCE SET; Schema: public; Owner: seba
 --
 
-SELECT pg_catalog.setval('nv_sec', 14, true);
+SELECT pg_catalog.setval('nv_sec', 15, true);
 
 
 --
@@ -3004,7 +3019,7 @@ ALTER TABLE public.ot_sec OWNER TO seba;
 -- Name: ot_sec; Type: SEQUENCE SET; Schema: public; Owner: seba
 --
 
-SELECT pg_catalog.setval('ot_sec', 1, false);
+SELECT pg_catalog.setval('ot_sec', 4, true);
 
 
 --
@@ -3971,7 +3986,7 @@ ALTER SEQUENCE tbl_audit_pk_audit_seq OWNED BY log.pk_audit;
 -- Name: tbl_audit_pk_audit_seq; Type: SEQUENCE SET; Schema: public; Owner: seba
 --
 
-SELECT pg_catalog.setval('tbl_audit_pk_audit_seq', 858, true);
+SELECT pg_catalog.setval('tbl_audit_pk_audit_seq', 913, true);
 
 
 --
@@ -4533,9 +4548,7 @@ COPY compatibilidad (art_cod, marca_cod, modelo_cod, modelo_ano) FROM stdin;
 --
 
 COPY cot_odc_art (doc_cod, cliente_cod, not_ven_cod, emp_rut, doc_fecha, doc_obs, doc_neto, doc_iva, doc_total, doc_total_desc) FROM stdin;
-1	26	11	18293486-0	2016-03-06	\N	\N	\N	14000	\N
-3	22	13	18293486-0	2016-03-06	\N	\N	\N	90000	\N
-2	27	14	18293486-0	2016-03-06	\N	\N	\N	54000	\N
+2	27	15	18293486-0	2016-03-06	\N	\N	\N	54000	\N
 \.
 
 
@@ -4544,8 +4557,7 @@ COPY cot_odc_art (doc_cod, cliente_cod, not_ven_cod, emp_rut, doc_fecha, doc_obs
 --
 
 COPY cot_odc_serv (doc_cod, cliente_cod, not_ven_cod, emp_rut, doc_fecha, doc_obs, doc_neto, doc_iva, doc_total, doc_total_desc) FROM stdin;
-4	22	\N	18293486-0	2016-03-06	\N	\N	\N	40000	\N
-5	22	\N	18293486-0	2016-03-06	\N	\N	\N	70000	\N
+3	22	\N	18293486-0	2016-03-07	\N	\N	\N	40000	\N
 \.
 
 
@@ -4554,11 +4566,8 @@ COPY cot_odc_serv (doc_cod, cliente_cod, not_ven_cod, emp_rut, doc_fecha, doc_ob
 --
 
 COPY cotizacion (doc_cod, cot_est_cod, cliente_cod, not_ven_cod, emp_rut, doc_fecha, doc_obs, doc_neto, doc_iva, doc_total, doc_total_desc) FROM stdin;
-3	0	22	-1	18293486-0	2016-03-06	\N	\N	\N	90000	\N
-1	0	26	-1	18293486-0	2016-03-06	\N	\N	\N	14000	\N
-2	1	27	14	18293486-0	2016-03-06	\N	\N	\N	54000	\N
-4	0	22	\N	18293486-0	2016-03-06	\N	\N	\N	40000	\N
-5	0	22	\N	18293486-0	2016-03-06	\N	\N	\N	70000	\N
+2	1	27	15	18293486-0	2016-03-06	\N	\N	\N	54000	\N
+3	1	22	\N	18293486-0	2016-03-07	\N	\N	\N	40000	\N
 \.
 
 
@@ -4567,12 +4576,9 @@ COPY cotizacion (doc_cod, cot_est_cod, cliente_cod, not_ven_cod, emp_rut, doc_fe
 --
 
 COPY det_cot_odc_art (doc_cod, det_num_linea, art_cod, art_cant, art_desc, art_precio) FROM stdin;
-1	1	CK-RK-500	1	\N	14000
 2	1	CK-RK-500	1	\N	14000
 2	2	acc-01	1	\N	25000
 2	3	Qc-200	1	\N	15000
-3	1	acc-02	1	\N	10000
-3	2	Rep-01	2	\N	40000
 \.
 
 
@@ -4589,11 +4595,8 @@ COPY det_ot (ot_cod, ot_num_linea, serv_cod, marca_cod, modelo_cod, modelo_ano, 
 --
 
 COPY doc_previo (doc_cod, cliente_cod, not_ven_cod, emp_rut, doc_fecha, doc_obs, doc_neto, doc_iva, doc_total, doc_total_desc) FROM stdin;
-1	26	\N	18293486-0	2016-03-06 00:00:00	\N	\N	\N	14000	\N
 2	27	\N	18293486-0	2016-03-06 00:00:00	\N	\N	\N	54000	\N
-3	22	\N	18293486-0	2016-03-06 00:00:00	\N	\N	\N	90000	\N
-4	22	\N	18293486-0	2016-03-06 00:00:00	\N	\N	\N	40000	\N
-5	22	\N	18293486-0	2016-03-06 00:00:00	\N	\N	\N	70000	\N
+3	22	\N	18293486-0	2016-03-07 00:00:00	\N	\N	\N	40000	\N
 \.
 
 
@@ -4636,7 +4639,7 @@ COPY empleado (emp_rut, cargo_cod, emp_nom, emp_ape, emp_tel, email, encrypted_p
 17673797-2	0	jp	jp		a@a.xx	$2a$10$U0yukdIzSE5T.IQu3PjGPeU0kAci4rZENfekZYwN/u8He0Fh1tl6e	\N	\N	\N	1	2016-03-02 11:27:15.785996	2016-03-02 11:27:15.785996	127.0.0.1	127.0.0.1
 21882841-8	2	Karla	Bravo	78945612	kbravo@serviventas.cl	$2a$10$b18wFkVQqJ/G0..HadOdv.Cp5LWGgBYrWYrkP3knlF7VbuYV6AHJi	\N	\N	\N	5	2016-03-02 18:32:16.047217	2016-03-02 18:31:27.432664	127.0.0.1	127.0.0.1
 23578433-5	1	Jorge			jorge@serviventas.cl	$2a$10$xBKqMsIwEUDjBgWdSqjhv.rz0rbt0GaReSB8EOweu8Cyfa4y1BcT.	\N	\N	\N	0	\N	\N	\N	\N
-18293486-0	0	Sebastian	Calderon	78018863	scalderon@serviventas.cl	$2a$10$zgHEpX2hL4./edVCBoK3OuDmWtJN6rUaXupUQOi0hAKR5VfGcQtlK	2664509a87dfa736730d08987ca7df97da538bba69584ac913ec4b0b12397ced	2016-03-01 16:55:24.773185	\N	27	2016-03-05 21:38:45.553923	2016-03-04 13:16:36.060044	127.0.0.1	127.0.0.1
+18293486-0	0	Sebastian	Calderon	78018863	scalderon@serviventas.cl	$2a$10$zgHEpX2hL4./edVCBoK3OuDmWtJN6rUaXupUQOi0hAKR5VfGcQtlK	2664509a87dfa736730d08987ca7df97da538bba69584ac913ec4b0b12397ced	2016-03-01 16:55:24.773185	\N	28	2016-03-07 01:29:34.723653	2016-03-05 21:38:45.553923	127.0.0.1	127.0.0.1
 \.
 
 
@@ -4690,6 +4693,9 @@ COPY estado_od (od_est_cod, od_est_descr) FROM stdin;
 --
 
 COPY estado_ot (ot_est_cod, ot_est_descr) FROM stdin;
+0	Pendiente
+1	Asignada
+2	Realizada
 \.
 
 
@@ -5266,6 +5272,61 @@ COPY log (pk_audit, "TableName", "Operation", "OldValue", "NewValue", "UpdateDat
 856	serv_inst_det                                	I	\N	(5,1,4,Rep-01,7,2015,,)	2016-03-06 17:20:51.43606	seba                                         
 857	serv_inst_det                                	I	\N	(5,2,2,acc-02,3,2014,,)	2016-03-06 17:20:51.471037	seba                                         
 858	serv_inst_det                                	I	\N	(5,3,4,acc-01,10,2011,,)	2016-03-06 17:20:51.510008	seba                                         
+859	empleado                                     	U	(18293486-0,0,Sebastian,Calderon,78018863,scalderon@serviventas.cl,$2a$10$zgHEpX2hL4./edVCBoK3OuDmWtJN6rUaXupUQOi0hAKR5VfGcQtlK,2664509a87dfa736730d08987ca7df97da538bba69584ac913ec4b0b12397ced,"2016-03-01 16:55:24.773185",,27,"2016-03-05 21:38:45.553923","2016-03-04 13:16:36.060044",127.0.0.1,127.0.0.1)	(18293486-0,0,Sebastian,Calderon,78018863,scalderon@serviventas.cl,$2a$10$zgHEpX2hL4./edVCBoK3OuDmWtJN6rUaXupUQOi0hAKR5VfGcQtlK,2664509a87dfa736730d08987ca7df97da538bba69584ac913ec4b0b12397ced,"2016-03-01 16:55:24.773185",,28,"2016-03-07 01:29:34.723653","2016-03-05 21:38:45.553923",127.0.0.1,127.0.0.1)	2016-03-07 01:29:34.724246	seba                                         
+860	cotizacion                                   	U	(1,0,26,-1,18293486-0,2016-03-06,,,,14000,)	(1,1,26,-1,18293486-0,2016-03-06,,,,14000,)	2016-03-07 01:42:47.510635	seba                                         
+861	cotizacion                                   	U	(2,1,27,14,18293486-0,2016-03-06,,,,54000,)	(2,0,27,-1,18293486-0,2016-03-06,,,,54000,)	2016-03-06 22:44:18.899602	seba                                         
+862	nota_de_venta                                	D	(14,,1,14,2,2016-03-06,,2)	\N	2016-03-06 22:44:18.899602	seba                                         
+863	doc_previo                                   	D	(1,26,,18293486-0,"2016-03-06 00:00:00",,,,14000,)	\N	2016-03-07 01:45:42.535032	seba                                         
+864	cotizacion                                   	D	(1,1,26,-1,18293486-0,2016-03-06,,,,14000,)	\N	2016-03-07 01:45:42.535032	seba                                         
+865	det_cot_odc_art                              	D	(1,1,CK-RK-500,1,,14000)	\N	2016-03-07 01:45:42.535032	seba                                         
+866	cotizacion                                   	U	(3,0,22,-1,18293486-0,2016-03-06,,,,90000,)	(3,1,22,-1,18293486-0,2016-03-06,,,,90000,)	2016-03-07 01:45:47.427429	seba                                         
+867	doc_previo                                   	D	(3,22,,18293486-0,"2016-03-06 00:00:00",,,,90000,)	\N	2016-03-07 01:46:18.245341	seba                                         
+868	cotizacion                                   	D	(3,1,22,-1,18293486-0,2016-03-06,,,,90000,)	\N	2016-03-07 01:46:18.245341	seba                                         
+869	det_cot_odc_art                              	D	(3,1,acc-02,1,,10000)	\N	2016-03-07 01:46:18.245341	seba                                         
+870	det_cot_odc_art                              	D	(3,2,Rep-01,2,,40000)	\N	2016-03-07 01:46:18.245341	seba                                         
+871	cotizacion                                   	U	(2,0,27,-1,18293486-0,2016-03-06,,,,54000,)	(2,1,27,-1,18293486-0,2016-03-06,,,,54000,)	2016-03-07 01:51:16.458578	seba                                         
+872	nota_de_venta                                	I	\N	(15,,0,,,2016-03-07,,2)	2016-03-07 01:51:16.458578	seba                                         
+873	cotizacion                                   	U	(2,1,27,-1,18293486-0,2016-03-06,,,,54000,)	(2,1,27,15,18293486-0,2016-03-06,,,,54000,)	2016-03-07 01:51:16.945265	seba                                         
+874	doc_previo                                   	I	\N	(6,22,,18293486-0,"2016-03-06 00:00:00",,,,40000,)	2016-03-07 02:06:06.498285	seba                                         
+875	cotizacion                                   	I	\N	(6,0,22,,18293486-0,2016-03-06,,,,40000,)	2016-03-07 02:06:06.498285	seba                                         
+876	serv_inst_det                                	I	\N	(6,1,4,Rep-01,7,2015,,)	2016-03-07 02:06:06.549486	seba                                         
+877	estado_ot                                    	I	\N	(0,Pendiente)	2016-03-06 23:23:54.313661	seba                                         
+878	estado_ot                                    	I	\N	(1,Asignada)	2016-03-06 23:23:58.104044	seba                                         
+879	estado_ot                                    	I	\N	(2,Realizada)	2016-03-06 23:24:02.241787	seba                                         
+880	cotizacion                                   	U	(4,0,22,,18293486-0,2016-03-06,,,,40000,)	(4,1,22,,18293486-0,2016-03-06,,,,40000,)	2016-03-07 02:42:25.308747	seba                                         
+881	orden_de_trabajo                             	I	\N	(1,,,4,0,,2016-03-07,,)	2016-03-07 02:42:25.308747	seba                                         
+882	doc_previo                                   	D	(5,22,,18293486-0,"2016-03-06 00:00:00",,,,70000,)	\N	2016-03-07 02:57:43.925729	seba                                         
+883	cotizacion                                   	D	(5,0,22,,18293486-0,2016-03-06,,,,70000,)	\N	2016-03-07 02:57:43.925729	seba                                         
+884	serv_inst_det                                	D	(5,1,4,Rep-01,7,2015,,)	\N	2016-03-07 02:57:43.925729	seba                                         
+885	serv_inst_det                                	D	(5,2,2,acc-02,3,2014,,)	\N	2016-03-07 02:57:43.925729	seba                                         
+886	serv_inst_det                                	D	(5,3,4,acc-01,10,2011,,)	\N	2016-03-07 02:57:43.925729	seba                                         
+887	cotizacion                                   	U	(6,0,22,,18293486-0,2016-03-06,,,,40000,)	(6,1,22,,18293486-0,2016-03-06,,,,40000,)	2016-03-07 02:59:49.804926	seba                                         
+888	orden_de_trabajo                             	I	\N	(2,,,6,0,,2016-03-07,,)	2016-03-07 02:59:49.804926	seba                                         
+889	orden_de_trabajo                             	D	(2,,,6,0,,2016-03-07,,)	\N	2016-03-07 00:12:30.301952	seba                                         
+890	orden_de_trabajo                             	D	(1,,,4,0,,2016-03-07,,)	\N	2016-03-07 00:12:33.175158	seba                                         
+891	doc_previo                                   	D	(4,22,,18293486-0,"2016-03-06 00:00:00",,,,40000,)	\N	2016-03-07 03:19:56.470988	seba                                         
+892	cotizacion                                   	D	(4,1,22,,18293486-0,2016-03-06,,,,40000,)	\N	2016-03-07 03:19:56.470988	seba                                         
+893	serv_inst_det                                	D	(4,1,4,acc-01,10,2011,,)	\N	2016-03-07 03:19:56.470988	seba                                         
+894	serv_inst_det                                	D	(4,2,4,Rep-01,7,2015,,)	\N	2016-03-07 03:19:56.470988	seba                                         
+895	doc_previo                                   	D	(6,22,,18293486-0,"2016-03-06 00:00:00",,,,40000,)	\N	2016-03-07 03:20:00.179453	seba                                         
+896	cotizacion                                   	D	(6,1,22,,18293486-0,2016-03-06,,,,40000,)	\N	2016-03-07 03:20:00.179453	seba                                         
+897	serv_inst_det                                	D	(6,1,4,Rep-01,7,2015,,)	\N	2016-03-07 03:20:00.179453	seba                                         
+898	doc_previo                                   	I	\N	(3,22,,18293486-0,"2016-03-07 00:00:00",,,,40000,)	2016-03-07 03:20:11.365637	seba                                         
+899	cotizacion                                   	I	\N	(3,0,22,,18293486-0,2016-03-07,,,,40000,)	2016-03-07 03:20:11.365637	seba                                         
+900	serv_inst_det                                	I	\N	(3,1,4,Rep-01,7,2015,,)	2016-03-07 03:20:11.618858	seba                                         
+901	cotizacion                                   	U	(3,0,22,,18293486-0,2016-03-07,,,,40000,)	(3,1,22,,18293486-0,2016-03-07,,,,40000,)	2016-03-07 03:20:14.645799	seba                                         
+902	orden_de_trabajo                             	I	\N	(3,,,3,0,,2016-03-07,,)	2016-03-07 03:20:14.645799	seba                                         
+903	cotizacion                                   	U	(3,1,22,,18293486-0,2016-03-07,,,,40000,)	(3,0,22,-1,18293486-0,2016-03-07,,,,40000,)	2016-03-07 00:21:27.732331	seba                                         
+904	orden_de_trabajo                             	D	(3,,,3,0,,2016-03-07,,)	\N	2016-03-07 00:21:27.732331	seba                                         
+905	doc_previo                                   	D	(3,22,,18293486-0,"2016-03-07 00:00:00",,,,40000,)	\N	2016-03-07 03:22:27.131843	seba                                         
+906	cotizacion                                   	D	(3,0,22,-1,18293486-0,2016-03-07,,,,40000,)	\N	2016-03-07 03:22:27.131843	seba                                         
+907	serv_inst_det                                	D	(3,1,4,Rep-01,7,2015,,)	\N	2016-03-07 03:22:27.131843	seba                                         
+908	doc_previo                                   	I	\N	(3,22,,18293486-0,"2016-03-07 00:00:00",,,,40000,)	2016-03-07 03:22:39.297666	seba                                         
+909	cotizacion                                   	I	\N	(3,0,22,,18293486-0,2016-03-07,,,,40000,)	2016-03-07 03:22:39.297666	seba                                         
+910	serv_inst_det                                	I	\N	(3,1,4,Rep-01,7,2015,,)	2016-03-07 03:22:39.455634	seba                                         
+911	cotizacion                                   	U	(3,0,22,,18293486-0,2016-03-07,,,,40000,)	(3,1,22,,18293486-0,2016-03-07,,,,40000,)	2016-03-07 03:22:53.782729	seba                                         
+912	orden_de_trabajo                             	I	\N	(4,,,3,0,,2016-03-07,,)	2016-03-07 03:22:53.782729	seba                                         
+913	orden_de_trabajo                             	U	(4,,,3,0,,2016-03-07,,)	(4,,,3,0,,2016-03-07,,7)	2016-03-07 03:22:54.045343	seba                                         
 \.
 
 
@@ -5323,7 +5384,7 @@ COPY modelo (marca_cod, modelo_cod, modelo_nombre, modelo_ano) FROM stdin;
 --
 
 COPY nota_de_venta (not_ven_cod, od_cod, not_ven_est_cod, doc_pago_cod, pago_cod, not_ven_fecha, not_ven_obs, doc_cod) FROM stdin;
-14	\N	1	14	2	2016-03-06	\N	2
+15	\N	0	\N	\N	2016-03-07	\N	2
 \.
 
 
@@ -5348,6 +5409,7 @@ COPY orden_de_despacho (od_cod, not_ven_cod, od_est_cod, od_fecha, od_obs, desp_
 --
 
 COPY orden_de_trabajo (ot_cod, veh_pat, not_ven_cod, doc_cod, ot_est_cod, emp_rut, ot_fecha, ot_obs, modelo_cod) FROM stdin;
+4	\N	\N	3	0	\N	2016-03-07	\N	7
 \.
 
 
@@ -5439,6 +5501,8 @@ COPY schema_migrations (version) FROM stdin;
 20160306011613
 20160306011643
 20160306011702
+20160307025436
+20160307032854
 \.
 
 
@@ -5447,8 +5511,7 @@ COPY schema_migrations (version) FROM stdin;
 --
 
 COPY serv_inst (doc_cod, not_ven_cod, emp_rut, doc_fecha, doc_obs, doc_neto, doc_iva, doc_total, doc_total_desc, cliente_cod) FROM stdin;
-4	\N	18293486-0	2016-03-06	\N	\N	\N	40000	\N	22
-5	\N	18293486-0	2016-03-06	\N	\N	\N	70000	\N	22
+3	\N	18293486-0	2016-03-07	\N	\N	\N	40000	\N	22
 \.
 
 
@@ -5457,11 +5520,7 @@ COPY serv_inst (doc_cod, not_ven_cod, emp_rut, doc_fecha, doc_obs, doc_neto, doc
 --
 
 COPY serv_inst_det (doc_cod, si_num_linea, marca_cod, art_cod, modelo_cod, modelo_ano, si_desc, serv_precio) FROM stdin;
-4	1	4	acc-01	10	2011	\N	\N
-4	2	4	Rep-01	7	2015	\N	\N
-5	1	4	Rep-01	7	2015	\N	\N
-5	2	2	acc-02	3	2014	\N	\N
-5	3	4	acc-01	10	2011	\N	\N
+3	1	4	Rep-01	7	2015	\N	\N
 \.
 
 
@@ -7149,6 +7208,8 @@ CREATE TRIGGER cambio_est_ot
     FOR EACH ROW
     EXECUTE PROCEDURE cambiodeestot();
 
+ALTER TABLE orden_de_trabajo DISABLE TRIGGER cambio_est_ot;
+
 
 --
 -- Name: cambio_est_ot_in; Type: TRIGGER; Schema: public; Owner: seba
@@ -7158,6 +7219,18 @@ CREATE TRIGGER cambio_est_ot_in
     AFTER INSERT ON orden_de_trabajo
     FOR EACH ROW
     EXECUTE PROCEDURE cambiodeestot_in();
+
+ALTER TABLE orden_de_trabajo DISABLE TRIGGER cambio_est_ot_in;
+
+
+--
+-- Name: cambiocotsi; Type: TRIGGER; Schema: public; Owner: seba
+--
+
+CREATE TRIGGER cambiocotsi
+    AFTER DELETE ON orden_de_trabajo
+    FOR EACH ROW
+    EXECUTE PROCEDURE cambioestcotsi();
 
 
 --
@@ -7257,7 +7330,7 @@ CREATE TRIGGER creacotsi
 CREATE TRIGGER creanotav
     AFTER UPDATE ON cotizacion
     FOR EACH ROW
-    EXECUTE PROCEDURE crearnotvent();
+    EXECUTE PROCEDURE crearnotventot();
 
 
 --

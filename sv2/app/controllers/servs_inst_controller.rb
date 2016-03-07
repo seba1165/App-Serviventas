@@ -11,6 +11,7 @@ class ServsInstController < ApplicationController
     if current_empleado.cargo_empleado.cargo_nom.downcase == "administrador" || current_empleado.cargo_empleado.cargo_nom.downcase == "vendedor"
       @insts = SiVehiculoArticulo.all
       @cot = ServInst.new
+      @cart = carrito_actual
     else
       redirect_to '/errors/not_found'
     end
@@ -118,6 +119,33 @@ class ServsInstController < ApplicationController
     end
   end
 
+  def aprobar
+    if current_empleado.cargo_empleado.cargo_nom.downcase == "administrador" || current_empleado.cargo_empleado.cargo_nom.downcase == "vendedor"
+      @cot = Cotizacion.find(params[:id]);
+      @cotSI = ServInst.find(params[:id]);
+      @cot.cot_est_cod = 1
+      if @cot.save
+        @ot = OrdenDeTrabajo.where(doc_cod: @cot.doc_cod).first
+        @modelo = ServInstDet.where(doc_cod: @cot.doc_cod).first.modelo_cod
+        @ot.modelo_cod = @modelo
+        @ot.save
+        redirect_to servs_inst_index_path, :notice => "Cotizacion Aprobada";
+      else
+        redirect_to servs_inst_index_path, :notice => "La cotizacion no pudo ser aprobada";
+      end
+    else
+      redirect_to '/errors/not_found'
+    end
+  end
+
+  def elimCotSI
+    if current_empleado.cargo_empleado.cargo_nom.downcase != "administrador"
+      redirect_to '/errors/not_found'
+    else
+      @doc = ServInst.find(params[:id]);
+    end
+  end
+
   def edit
   end
 
@@ -125,5 +153,20 @@ class ServsInstController < ApplicationController
   end
 
   def destroy
+    if current_empleado.cargo_empleado.cargo_nom.downcase != "administrador"
+      redirect_to '/errors/not_found'
+    else
+      @doc = DocPrevio.find(params[:id]);
+      @ot = OrdenDeTrabajo.where(doc_cod: @doc.doc_cod).first
+      if @ot.nil?
+        if @doc.destroy()
+          redirect_to servs_inst_index_path, :notice => "La cotizacion ha sido eliminada";
+        else
+          redirect_to servs_inst_index_path, :notice => "La cotizacion no ha podido ser eliminada";
+        end
+      else
+        redirect_to servs_inst_index_path, :notice => "La cotizacion no se puede borrar, tiene una orden de trabajo asociada";
+      end
+    end
   end
 end

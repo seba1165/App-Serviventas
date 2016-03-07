@@ -35,7 +35,9 @@
         <% @insts.each do |d| %>
             <tr>
               <td class="td-actions">
-                <%= button_to "Agregar", add_path(d.si_cod), :method => :get %>
+                <%if @cart.size == 0 %>
+                    <%= button_to "Agregar", add_path(d.si_cod), :method => :get %>
+              <%end%>
               </td>
               <td class="td-actions">
               </td>
