@@ -20,7 +20,7 @@ class NotasDeVentaController < ApplicationController
 
   def update
     if current_empleado.cargo_empleado.cargo_nom.downcase == "administrador" || current_empleado.cargo_empleado.cargo_nom.downcase == "vendedor"
-      @pago_cod = params[:not_ven]["pago_cod"];
+      @pago_cod = params[:not_ven]["pago_cod"]
       @doc_pago = params[:not_ven]["doc_pago"]
       if @pago_cod == ""
         redirect_to notas_de_venta_index_path, :notice => "Ingrese metodo de pago";

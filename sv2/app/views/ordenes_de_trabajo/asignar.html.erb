@@ -1,0 +1,25 @@
+<% flash.each do |key, value| %>
+    <p> <%= value %> </p>
+<% end %>
+<div class="container">
+  <h1 style="color:#0B2161"><FONT FACE="times new roman">ASIGNAR TÉCNICO A ORDEN DE TRABAJO</FONT></h1>
+  <hr>
+  <%= form_for @ot do |f| %>
+
+      <div class="field">
+        <td><%= f.label :emp_rut, "Técnico en Terreno" %></td>
+        <td><select name="[ot]emp_rut">
+          <% @emps.each do |d| %>
+              <option value="<%=d.emp_rut%>"><%=d.emp_nom%> <%=d.emp_ape%></option>
+          <% end %>
+        </select></td>
+      </div><br>
+
+
+      <div class="actions"><br>
+        <%= f.submit "Asignar" %>
+      </div>
+
+  <% end %>
+  <hr>
+</div>

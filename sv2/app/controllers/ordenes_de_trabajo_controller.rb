@@ -12,12 +12,20 @@ class OrdenesDeTrabajoController < ApplicationController
   end
 
   def update
+    @ot = OrdenDeTrabajo.find(params[:id])
+    @emp = params[:ot]["emp_rut"];
+    @ot.emp_rut = @emp
+    @ot.ot_est_cod = 1
+    @ot.save
+    redirect_to ordenes_de_trabajo_index_path, :notice => "Técnico asociado a la OT";
   end
 
   def destroy
   end
 
-  def designar
+  def asignar
+    @ot = OrdenDeTrabajo.find(params[:id])
+    @emps = Empleado.where(cargo_cod: 5)
   end
 
   def terminar

@@ -36,12 +36,14 @@
         <% @ots.each do |d| %>
             <tr>
               <td class="td-actions">
-                <%if Cotizacion.find(d.doc_cod).cot_est_cod == 0 %>
-                    <%= button_to "Aprobar", aprobar_path(d), :method => :get %>
+                <%if d.ot_est_cod == 0 %>
+                    <%= button_to "Asignar", asignar_path(d), :method => :get %>
                 <%end%>
               </td>
               <td class="td-actions">
-                <%= button_to "Borrar", elimCotODCArt_path(d.doc_cod), :method => :post %>
+                <%if d.ot_est_cod == 1 %>
+                    <%= button_to "Terminar", terminar_path(d), :method => :get %>
+                <%end%>
               </td>
               <td> <%= d.ot_cod %> </td>
               <td><a href="/servs_inst/show/<%= d.doc_cod %>"><%= d.doc_cod %></a></td>
@@ -50,7 +52,7 @@
               <td><%= Marca.where(marca_cod: @modelo.marca_cod).first.marca_nombre %> <%= @modelo.modelo_nombre %>  <%= @modelo.modelo_ano %></td>
               <td><%= d.estado_ot.ot_est_descr %></td>
               <td><%= d.ot_fecha %></td>
-              <td><%= d.emp_rut %></td>
+              <td><%= d.empleado.emp_nom %> <%= d.empleado.emp_ape %></td>
               <td></td>
               <td></td>
               <td></td>

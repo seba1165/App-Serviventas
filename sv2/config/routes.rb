@@ -107,6 +107,8 @@ Rails.application.routes.draw do
   get 'cots_odc_art/show'
 
   get 'cots_odc_art/aprobar/:id' => 'cots_odc_art#aprobar'
+  get 'ordenes_de_trabajo/terminar/:id' => 'ordenes_de_trabajo#terminar'
+  get 'ordenes_de_trabajo/asignar/:id' => 'ordenes_de_trabajo#asignar'
   get 'servs_inst/aprobar/:id' => 'servs_inst#aprobar'
   get 'notas_de_venta/pagar/:id' => 'notas_de_venta#pagar'
   get 'cots_odc_art/show/:id' => 'cots_odc_art#show'
@@ -163,6 +165,7 @@ Rails.application.routes.draw do
   resources :sis_vehiculo_articulo, :except => [:show]
   resources :servs_inst, :except => [:show]
   resources :notas_de_venta, :except => [:show]
+  resources :ordenes_de_trabajo, :except => [:show]
 
   #devise_for :empleados, :controllers => { :registrations => "registrations" } , :skip => [:registrations]
   #as :empleado do
@@ -192,8 +195,9 @@ Rails.application.routes.draw do
 
   post "cartart/:id" => 'cartart#add', as: :addArt
   post "cartart/rest/:id" => 'cartart#rest', as: :restArt
-
+  post "ordenes_de_trabajo/asignar/:id" => 'ordenes_de_trabajo#asignar', as: :asignar
   post "cots_odc_art/aprobar/:id" => 'cots_odc_art#aprobar', as: :aprobar
+  post "ordenes_de_trabajo/terminar/:id" => 'ordenes_de_trabajo#terminar', as: :terminar
   post "servs_inst/aprobar/:id" => 'servs_inst#aprobar', as: :aprobarCotSI
   post "cots_odc_art/show/:id" => 'cots_odc_art#show', as: :show
   post "empleados/show/:id" => 'empleados#show', as: :showEmp
