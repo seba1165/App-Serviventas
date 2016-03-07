@@ -112,6 +112,7 @@ Rails.application.routes.draw do
   get 'servs_inst/aprobar/:id' => 'servs_inst#aprobar'
   get 'notas_de_venta/pagar/:id' => 'notas_de_venta#pagar'
   get 'cots_odc_art/show/:id' => 'cots_odc_art#show'
+  get 'servs_inst/show/:id' => 'servs_inst#show'
   get 'empleados/show/:id' => 'empleados#show'
   get 'clientes/show/:id' => 'clientes#show'
   get 'clientes/index'
@@ -163,7 +164,7 @@ Rails.application.routes.draw do
   resources :marcas, :except => [:show]
   resources :modelos, :except => [:show]
   resources :sis_vehiculo_articulo, :except => [:show]
-  resources :servs_inst, :except => [:show]
+  resources :servs_inst
   resources :notas_de_venta, :except => [:show]
   resources :ordenes_de_trabajo, :except => [:show]
 

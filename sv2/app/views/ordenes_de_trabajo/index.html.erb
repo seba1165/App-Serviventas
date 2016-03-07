@@ -52,7 +52,11 @@
               <td><%= Marca.where(marca_cod: @modelo.marca_cod).first.marca_nombre %> <%= @modelo.modelo_nombre %>  <%= @modelo.modelo_ano %></td>
               <td><%= d.estado_ot.ot_est_descr %></td>
               <td><%= d.ot_fecha %></td>
-              <td><%= d.empleado.emp_nom %> <%= d.empleado.emp_ape %></td>
+              <%if d.ot_est_cod == 2 || d.ot_est_cod == 1 %>
+                  <td><a href="/empleados/show/<%= d.emp_rut %>"> <%= d.empleado.emp_nom %> <%= d.empleado.emp_ape %></a></td>
+              <%else%>
+                  <td></td>
+              <%end%>
               <td></td>
               <td></td>
               <td></td>

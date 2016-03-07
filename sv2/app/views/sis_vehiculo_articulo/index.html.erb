@@ -40,8 +40,8 @@
               </td>
               <td><%= ParaInstalacion.where(art_cod: d.art_cod).first.art_nom %> </td>
               <td><%= Marca.where(marca_cod: d.marca_cod).first.marca_nombre %> <%= Modelo.where(modelo_cod: d.modelo_cod).first.modelo_nombre %> <%= d.modelo_ano %></td>
-              <td><%= d.s_v_a_mo_pr %> </td>
-              <td><%= d.s_v_a_in_pr%> </td>
+              <td><%= number_to_currency(d.s_v_a_mo_pr) %> </td>
+              <td><%= number_to_currency(d.s_v_a_in_pr) %> </td>
             </tr>
         <% end %>
         </tbody>

@@ -24,7 +24,10 @@ class ClientesController < ApplicationController
   end
 
   def show
-    @cliente = Cliente.find(params[:id])
+    @cliente = Cliente.where(cliente_cod: params[:id]).first
+    if @cliente.nil?
+      redirect_to '/errors/not_found'
+    end
   end
 
   def create

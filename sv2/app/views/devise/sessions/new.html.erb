@@ -17,10 +17,10 @@
     <div class="collapse navbar-collapse" id="navbar-collapse-1">
       <%= form_for(:empleado, :url => session_path(:empleado), html: { class: "navbar-form navbar-right form-inline" }) do |f| %>
         <div class="form-group">
-          <%= f.text_field :email %>
+          <%= f.text_field :email, placeholder: "Ingrese Correo" %>
         </div>
         <div class="form-group">
-          <%= f.password_field :password %>
+          <%= f.password_field :password, placeholder: "Ingrese Contraseña" %>
         </div>
         <div class="checkbox">
           <%= f.check_box :remember_me %>

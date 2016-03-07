@@ -17,6 +17,13 @@ class ServsInstController < ApplicationController
     end
   end
 
+  def show
+    @cot = ServInst.where(doc_cod: params[:id]).first
+    if @cot.nil?
+      redirect_to '/errors/not_found'
+    end
+  end
+
   def create
     if current_empleado.cargo_empleado.cargo_nom.downcase == "administrador" || current_empleado.cargo_empleado.cargo_nom.downcase == "vendedor"
       if current_empleado.cargo_empleado.cargo_nom.downcase == "administrador" || current_empleado.cargo_empleado.cargo_nom.downcase == "vendedor"
@@ -95,12 +102,14 @@ class ServsInstController < ApplicationController
             num_linea = 1
             @cart.each do | id, quantity|
               servicio = SiVehiculoArticulo.where(si_cod: id).first
+              total_serv = servicio.s_v_a_mo_pr + servicio.s_v_a_mo_pr
               @det = ServInstDet.new({ :doc_cod => @doc,
                                        :si_num_linea => num_linea,
                                        :marca_cod => servicio.marca_cod,
                                        :modelo_cod => servicio.modelo_cod,
                                        :modelo_ano => servicio.modelo_ano,
                                        :art_cod => servicio.art_cod,
+                                       :serv_precio => total_serv
                                      });
               @det.save
               num_linea += 1
@@ -129,7 +138,7 @@ class ServsInstController < ApplicationController
         @modelo = ServInstDet.where(doc_cod: @cot.doc_cod).first.modelo_cod
         @ot.modelo_cod = @modelo
         @ot.save
-        redirect_to servs_inst_index_path, :notice => "Cotizacion Aprobada";
+        redirect_to servs_inst_index_path, :notice => "Cotizacion Aprobada, OT generada";
       else
         redirect_to servs_inst_index_path, :notice => "La cotizacion no pudo ser aprobada";
       end

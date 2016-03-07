@@ -23,7 +23,6 @@
         <tr class="filters">
           <th></th>
           <th></th>
-          <th><input type="text" class="form-control" placeholder="Codigo" disabled></th>
           <th><input type="text" class="form-control" placeholder="Tipo" disabled></th>
           <th><input type="text" class="form-control" placeholder="Nombre" disabled></th>
           <th><input type="text" class="form-control" placeholder="Apellido" disabled></th>
@@ -41,7 +40,6 @@
               <td class="td-actions">
                 <%= button_to "Borrar", elimCliente_path(d.cliente_cod), :method => :post %>
               </td>
-              <td><%= d.cliente_cod %></td>
               <td><%= d.tipo_cliente.tipo_cliente_descr %></td>
               <td><%= d.cliente_nom %></td>
               <td><%= d.cliente_ape %></td>

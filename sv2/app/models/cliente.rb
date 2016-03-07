@@ -7,5 +7,6 @@ class Cliente < ActiveRecord::Base
   validates :cliente_correo, :uniqueness => true
   validates_format_of :cliente_correo, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
   validates :tipo_cliente_cod, :presence => true
+  validates :cliente_correo, :presence => true
 
 end

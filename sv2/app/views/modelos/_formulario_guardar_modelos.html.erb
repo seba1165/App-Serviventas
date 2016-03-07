@@ -3,17 +3,17 @@
     <p></p>
 
     <div class="field">
-      <%= f.label :marca_cod, "Marca del Modelo" %><br />
+      <%= f.label :marca_cod, "Marca del Modelo (*)" %><br />
       <%= collection_select(:modelo, :marca_cod, Marca.all, :id, :marca_nombre, prompt: true) %>
     </div>
 
     <div class="field">
-      <%= f.label :modelo_nombre, "Nombre Modelo *" %><br />
+      <%= f.label :modelo_nombre, "Nombre Modelo (*)" %><br />
       <%= f.text_field :modelo_nombre, autofocus: true %>
     </div>
 
     <div class="field">
-      <%= f.label :modelo_ano, "Año del modelo *" %><br />
+      <%= f.label :modelo_ano, "Año del modelo (*)" %><br />
       <%= f.number_field :modelo_ano, autofocus: true %>
     </div>
 

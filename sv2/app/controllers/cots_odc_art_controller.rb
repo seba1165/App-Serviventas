@@ -16,7 +16,16 @@ class CotsOdcArtController < ApplicationController
   end
 
   def show
-    @cot = CotOdcArt.find(params[:id]);
+    if current_empleado.cargo_empleado.cargo_nom.downcase == "administrador" || current_empleado.cargo_empleado.cargo_nom.downcase == "vendedor"
+      @cot = CotOdcArt.where(doc_cod: params[:id]).first
+      if @cot.nil?
+        redirect_to '/errors/not_found'
+      else
+        @cot = CotOdcArt.where(doc_cod: params[:id]).first
+      end
+    else
+      redirect_to '/errors/not_found'
+    end
   end
 
   def create
