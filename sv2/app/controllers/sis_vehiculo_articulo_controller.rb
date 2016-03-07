@@ -24,6 +24,7 @@ class SisVehiculoArticuloController < ApplicationController
     redirect_to '/errors/not_found'
   else
     @marcas = Marca.all
+    @arts = ParaInstalacion.all
     #Recuperamos las varibles POST que vinieron desde la acción new.
     @art_cod = params[:sis_vehiculo_articulo][:art_cod];
     @modelo_cod = params[:sis_vehiculo_articulo][:modelo_cod];
@@ -43,11 +44,17 @@ class SisVehiculoArticuloController < ApplicationController
                              :s_v_a_in_pr => @s_v_a_in_pr
                          });
     #Verificamos si la tarea ha podido ser guardado correctamente.
-    if @SI.save()
-      redirect_to sis_vehiculo_articulo_path, :notice => "El servicio ha sido guardado con éxito";
+
+    if SiVehiculoArticulo.where(art_cod: @art_cod, modelo_cod: @modelo_cod).first.nil?
+      if @SI.save()
+        redirect_to sis_vehiculo_articulo_path, :notice => "El servicio ha sido guardado con éxito";
+      else
+        render "new";
+      end
     else
-      render "new";
+      redirect_to sis_vehiculo_articulo_path, :notice => "El servicio ya existe";
     end
+
   end
  end
 
