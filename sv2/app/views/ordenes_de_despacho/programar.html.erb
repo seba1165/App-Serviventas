@@ -1,0 +1,25 @@
+<% flash.each do |key, value| %>
+    <p> <%= value %> </p>
+<% end %>
+<div class="container">
+  <h1 style="color:#0B2161"><FONT FACE="times new roman">PROGRAMAR DESPACHO</FONT></h1>
+  <hr>
+  <%= form_for @od do |f| %>
+      <% @fecha = Time.now %>
+      <div class="field">
+        <td><%= f.label :desp_fecha, "Fecha de Despacho" %></td>
+        <input id="desp_fecha" min=<%=@fecha %> name="od[desp_fecha]" type="date">
+      </div><br>
+
+      <div class="field">
+        <%= f.label :od_dir, "Direccion de Despacho" %><br />
+        <%= f.text_field :od_dir, autofocus: true %>
+      </div>
+
+      <div class="actions"><br>
+        <%= f.submit "Programar Despacho" %>
+      </div>
+
+  <% end %>
+  <hr>
+</div>

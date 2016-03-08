@@ -42,7 +42,8 @@ class NotasDeVentaController < ApplicationController
         end
 
         if @not_ven.save
-          if @cotArt != nil
+          @not_ven.od_cod = OrdenDeDespacho.where(not_ven_cod: @not_ven.not_ven_cod).first.od_cod
+           if @cotArt != nil
             @dets = DetCotOdcArt.where(doc_cod: @cotArt.doc_cod)
             @dets.each do |d|
               @art = Articulo.where(art_cod: d.art_cod).first

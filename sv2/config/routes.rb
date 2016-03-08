@@ -1,5 +1,13 @@
 Rails.application.routes.draw do
 
+  get 'ordenes_de_despacho/index'
+
+  get 'ordenes_de_despacho/update'
+
+  get 'ordenes_de_despacho/programar'
+
+  get 'ordenes_de_despacho/despachar'
+
   get 'ordenes_de_trabajo/index'
 
   get 'ordenes_de_trabajo/edit'
@@ -115,8 +123,10 @@ Rails.application.routes.draw do
   get 'servs_inst/show/:id' => 'servs_inst#show'
   get 'empleados/show/:id' => 'empleados#show'
   get 'clientes/show/:id' => 'clientes#show'
-  get 'clientes/index'
+  get 'ordenes_de_despacho/despachar/:id' => 'ordenes_de_despacho#despachar'
 
+  get 'clientes/index'
+  get 'ordenes_de_despacho/programar/:id' => 'ordenes_de_despacho#programar'
   get 'clientes/new'
 
   get 'clientes/edit'
@@ -167,6 +177,7 @@ Rails.application.routes.draw do
   resources :servs_inst
   resources :notas_de_venta, :except => [:show]
   resources :ordenes_de_trabajo, :except => [:show]
+  resources :ordenes_de_despacho, :except => [:show]
 
   #devise_for :empleados, :controllers => { :registrations => "registrations" } , :skip => [:registrations]
   #as :empleado do
@@ -190,6 +201,7 @@ Rails.application.routes.draw do
   post "modelos/del/:id" => 'modelos#elimModelo', as: :elimModelo
   post "cots_odc_art/del/:id" => 'cots_odc_art#elimCotODCArt', as: :elimCotODCArt
   post "servs_inst/del/:id" => 'servs_inst#elimCotSI', as: :elimCotSI
+  post "ordenes_de_despacho/programar/:id" => 'ordenes_de_despacho#programar', as: :programar
 
   post "cart/:id" => 'cart#add', as: :add
   post "cart/rest/:id" => 'cart#rest', as: :rest
@@ -204,7 +216,7 @@ Rails.application.routes.draw do
   post "empleados/show/:id" => 'empleados#show', as: :showEmp
   post "clientes/show/:id" => 'clientes#show', as: :showCliente
   post "notas_de_venta/pagar/:id" => 'notas_de_venta#pagar', as: :pagar
-
+  post "ordenes_de_despacho/despachar/:id" => 'ordenes_de_despacho#despachar', as: :despachar
   post "sis_vehiculo_articulo/del/:id" => 'sis_vehiculo_articulo#elimSI', as: :elimSI
 
   get 'admin/parametro' => 'errors#construccion'

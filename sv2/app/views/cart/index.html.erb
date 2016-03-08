@@ -27,7 +27,7 @@
                 <td class="td-actions">
                   <%= button_to "Quitar", rest_path(id), :method => :get %>
                 </td>
-                <td><%= Articulo.find(servicio.art_cod).art_nom %> en <%= Marca.find(servicio.marca_cod).marca_nombre %> <%= Modelo.where(modelo_cod: servicio.modelo_cod).first.modelo_nombre %> <%= Modelo.where(modelo_cod: servicio.modelo_cod).first.modelo_ano %></td>
+                <td><%= Articulo.find(servicio.art_cod).art_cod %> en <%= Marca.find(servicio.marca_cod).marca_nombre %> <%= Modelo.where(modelo_cod: servicio.modelo_cod).first.modelo_nombre %> <%= Modelo.where(modelo_cod: servicio.modelo_cod).first.modelo_ano %></td>
                 <% total_si = servicio.s_v_a_mo_pr + servicio.s_v_a_in_pr %>
                 <td><%= number_to_currency (total_si)%></td>
                 <td></td>

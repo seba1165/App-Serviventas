@@ -1,0 +1,77 @@
+<% flash.each do |key, value| %>
+    <p> <%= value %> </p>
+<% end %>
+<body>
+<div class="container">
+  <h1 style="color:#0B2161"><FONT FACE="times new roman">ÓRDENES DE DESPACHO <small>   Editar y eliminar órdenes de despacho</small></FONT></h1>
+  <hr>
+  <div>
+    <hr>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="panel panel-primary filterable">
+      <div class="panel-heading" style="min-height:40px;">
+        <h3 class="panel-title pull-left">Órdenes de Despacho</h3>
+        <div class="pull-right">
+          <button href="javascript:;" class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span> Filtrar</button>
+        </div>
+      </div>
+      <table class="table table-filterable">
+        <thead>
+        <tr class="filters">
+          <th></th>
+          <th></th>
+          <th><input type="text" class="form-control" placeholder="Nota de Venta" disabled></th>
+          <th><input type="text" class="form-control" placeholder="Estado" disabled></th>
+          <th><input type="text" class="form-control" placeholder="Fecha" disabled></th>
+          <th><input type="text" class="form-control" placeholder="Fecha para Despacho" disabled></th>
+          <th><input type="text" class="form-control" placeholder="Dirección" disabled></th>
+          <th><input type="text" class="form-control" placeholder="Vendedor" disabled></th>
+        </tr>
+        </thead>
+        <tbody style="text-align: center">
+        <% @ods.each do |d| %>
+            <tr>
+              <td class="td-actions">
+                <%if d.od_est_cod == 0 %>
+                    <%= button_to "Programar", programar_path(d), :method => :get %>
+                <%end%>
+              </td>
+              <td class="td-actions">
+                <%if d.od_est_cod == 1 %>
+                    <%= button_to "Despachar", despachar_path(d), :method => :get %>
+                <%end%>
+              </td>
+              <td> <%= d.not_ven_cod %> </td>
+              <td><%= d.estado_od.od_est_descr %></td>
+              <td><%= d.od_fecha %></td>
+              <td><%= d.desp_fecha %></td>
+              <td><%= d.od_dir %></td>
+              <% @cot = NotaDeVenta.where(not_ven_cod: d.not_ven_cod).first %>
+              <% @rut = DocPrevio.where(doc_cod: @cot.doc_cod).first.emp_rut %>
+              <% @vendedor = Empleado.where(emp_rut: @rut).first %>
+              <td><a href="/empleados/show/<%= @vendedor.emp_rut %>"><%= @vendedor.emp_rut %></a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <hr>
+</div>
+<div>
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-1">
+      <button type: "submit" class="btn btn-default" style="color:#FFFFFF; background-color:#5858FA;" onclick="location.href='/';"><span class="glyphicon glyphicon-arrow-left"></span> Volver </button>
+    </div>
+  </div>
+  <hr>
+</div>
+</body>

@@ -41,7 +41,7 @@
               </td>
               <td class="td-actions">
               </td>
-              <td><%= Articulo.where(art_cod: d.art_cod).first.art_nom %> </td>
+              <td><%= Articulo.where(art_cod: d.art_cod).first.tipo_articulo.tipo_nom %> <%= Articulo.where(art_cod: d.art_cod).first.art_nom %> <%= Articulo.where(art_cod: d.art_cod).first.art_cod %> </td>
               <td><%= Marca.where(marca_cod: d.marca_cod).first.marca_nombre %> <%= Modelo.where(modelo_cod: d.modelo_cod).first.modelo_nombre %> <%= d.modelo_ano %></td>
               <td><%= number_to_currency(d.s_v_a_mo_pr + d.s_v_a_in_pr)%> </td>
             </tr>

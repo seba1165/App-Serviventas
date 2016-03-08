@@ -3,7 +3,6 @@ class Accesorio < ActiveRecord::Base
 
 	validates :art_cod, :presence => true, :uniqueness => true
 	validates :art_tipo_cod, :presence => true, numericality: { only_integer: true, greater_than: 0 }
-	validates :art_nom, :presence => true
 	validates :art_stock, :presence => true, numericality: { only_integer: true, greater_than: 0 }
 	validates :art_precio, :presence => true, numericality: { only_integer: true, greater_than: 0 }
 end

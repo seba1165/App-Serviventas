@@ -53,7 +53,7 @@ td.cortar {
                         <td class="cortar">
                           <% @dets = DetCotOdcArt.where(doc_cod: @cot.doc_cod) %>
                           <% @dets.each do |d| %>
-                              <p><%= d.det_num_linea %>. <%= d.articulo.art_nom %> <%= d.articulo.art_cod %> X <%= d.art_cant %> = <%= number_to_currency(d.art_cant * d.art_precio) %> </p><br>
+                              <p><%= d.det_num_linea %>. <%= d.articulo.tipo_articulo.tipo_nom %> <%= d.articulo.art_nom%> <%= d.articulo.art_cod %> X <%= d.art_cant %> = <%= number_to_currency(d.art_cant * d.art_precio) %> </p><br>
                           <%end%>
                         </td>
                       </tr>
